@@ -13,6 +13,8 @@ static Menu s_LoadoutSlotMenu;
 // depending on which ones the player is browsing at the time.
 static Menu s_EquipMenu;
 
+static Panel s_DescriptionMenu;
+
 static int g_iPlayerClassInMenu[MAXPLAYERS + 1];
 static int g_iPlayerSlotInMenu[MAXPLAYERS + 1];
 
@@ -171,6 +173,22 @@ void BuildEquipMenu() {
 	delete itemList;
 }
 
+void BuildAndDisplayDescriptionMenu(int client, char uid[MAX_ITEM_IDENTIFIER_LENGTH]) {
+	delete s_DescriptionMenu;
+	
+	s_DescriptionMenu = new Panel();
+	
+	CustomItemDefinition item;
+	GetCustomItemDefinition(uid, item);
+	
+	s_DescriptionMenu.SetTitle(item.displayName);
+	s_DescriptionMenu.DrawText(item.description);
+	s_DescriptionMenu.DrawItem("Back");
+	s_DescriptionMenu.DrawItem("Close");
+	
+	s_DescriptionMenu.Send(client, OnDescriptionMenuEvent, 30);
+}
+
 /**
  * Determines visibility of items in the loadout menu.
  */
@@ -307,6 +325,8 @@ static int OnEquipMenuEvent(Menu menu, MenuAction action, int param1, int param2
 			// TODO: we should be making this a submenu with item description?
 			if (uid[0]) {
 				SetClientCustomLoadoutItem(client, g_iPlayerClassInMenu[client], uid);
+				
+				BuildAndDisplayDescriptionMenu(client, uid);
 			} else {
 				UnsetClientCustomLoadoutItem(client, g_iPlayerClassInMenu[client],
 						g_iPlayerSlotInMenu[client]);
@@ -394,6 +414,24 @@ static int OnEquipMenuEvent(Menu menu, MenuAction action, int param1, int param2
 			EmitSoundToClient(client, SOUND_MENU_BUTTON_CLOSE);
 			if (reason == MenuCancel_ExitBack) {
 				s_LoadoutSlotMenu.Display(client, 30);
+			}
+		}
+	}
+	return 0;
+}
+
+static int OnDescriptionMenuEvent(Menu menu, MenuAction action, int param1, int param2) {
+	switch (action) {
+		/**
+		 * Return back to the loadout selection menu.
+		 */
+		case MenuAction_Select: {
+			int client = param1;
+			int reason = param2;
+			
+			EmitSoundToClient(client, SOUND_MENU_BUTTON_CLOSE);
+			if (reason == 1) {
+				s_EquipMenu.Display(client, 30);
 			}
 		}
 	}
