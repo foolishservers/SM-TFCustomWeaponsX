@@ -330,6 +330,8 @@ static int OnEquipMenuEvent(Menu menu, MenuAction action, int param1, int param2
 			} else {
 				UnsetClientCustomLoadoutItem(client, g_iPlayerClassInMenu[client],
 						g_iPlayerSlotInMenu[client]);
+					
+				s_EquipMenu.Display(client, 30);
 			}
 		}
 		
