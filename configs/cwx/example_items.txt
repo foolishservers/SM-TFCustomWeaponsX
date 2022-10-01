@@ -40,7 +40,7 @@
 		"attributes_game"
 		{
 			"airblast_destroy_projectile"				"1"
-			"airblast cost scale hidden"				"0.2"
+			"airblast cost decreased"					"0.2"
 		}
 		
 		//// custom attributes by cattr -- this just gets copied into Custom Attributes' core, nested structures and all
@@ -50,11 +50,16 @@
 		{
 			"airblast projectiles restores health"		"30"
 			"airblast projectiles adds self condition"	"condition=32 duration=10"
-			
 			//// commented out below in case the below attribute exists
 			//// if the attribute exists, you will need to ensure the associated resources are cached
 			// "clientmodel override"					"models/weapons/c_models/c_firkin_flamer/c_firkin_flamer.mdl"
 		}
+		
+		//// item description, appears upon equipping in its own menu, useful for displaying weapon stats to the user
+		"description"	"(i) Airblast destroys projectiles
+						(+) Airblasting projectiles restores 30 health on wearer
+						(+) Airblasting projectiles gives speed boost for 10 seconds
+						(+) 20% airblast cost"
 	}
 	"{e1bc546e-b0b7-41c5-bc5e-8257406d575c}"
 	{
@@ -67,5 +72,6 @@
 			// you can't set things like "custom name attr"
 			"custom projectile model"					"models/weapons/c_models/c_grenadelauncher/c_grenadelauncher.mdl"
 		}
+		"description"	"(i) Weapon uses Grenade Launcher projectiles"
 	}
 }

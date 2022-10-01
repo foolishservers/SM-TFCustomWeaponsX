@@ -10,6 +10,7 @@ enum struct CustomItemDefinition {
 	char uid[MAX_ITEM_IDENTIFIER_LENGTH];
 	int defindex;
 	char displayName[128];
+	char description[512];
 	KeyValues localizedNames;
 	char className[128];
 	int loadoutPosition[NUM_PLAYER_CLASSES];
@@ -160,6 +161,9 @@ bool CreateItemFromSection(KeyValues config) {
 	config.GetSectionName(item.uid, sizeof(item.uid));
 	
 	config.GetString("name", item.displayName, sizeof(item.displayName));
+	
+	config.GetString("description", item.description, sizeof(item.description));
+	ReplaceString(item.description, 512, "\t", "", false);
 	
 	char inheritFromItem[64];
 	config.GetString("inherits", inheritFromItem, sizeof(inheritFromItem));
