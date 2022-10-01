@@ -929,15 +929,18 @@
 	{
 		"en" "[No custom item]"
 		"ru" "[Нет польз. предмета]"
+		"ko" "[커스텀 아이템 없음]"
 	}
 	"CustomItemsUnavailable"
 	{
 		"en" "(Custom items are currently disabled by the server operator.)"
 		"ru" "(Пользовательские предметы в настоящее время отключены оператором сервера.)"
+		"ko" "(현재 커스텀 아이템은 서버 관리자로 인해 비활성화 되었습니다)"
 	}
 	"ItemForcedByServer"
 	{
 		"en" "(forced by server)"
 		"ru" "(использ. сервером)"
+		"ko" "(서버에서 강제로 바꿈)"
 	}
 }
