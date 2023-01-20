@@ -115,6 +115,7 @@ public void OnPluginStart() {
 	delete hGameConf;
 	
 	HookEvent("player_spawn", OnPlayerSpawnPost);
+	HookEvent("player_changeclass", OnPlayerChangeClassPost);
 	HookUserMessage(GetUserMessageId("PlayerLoadoutUpdated"), OnPlayerLoadoutUpdated,
 			.post = OnPlayerLoadoutUpdatedPost);
 	
@@ -354,6 +355,8 @@ Action OnPlayerLoadoutUpdated(UserMsg msg_id, BfRead msg, const int[] players,
 		int playersNum, bool reliable, bool init) {
 	int client = msg.ReadByte();
 	s_LastUpdatedClient = GetClientSerial(client);
+
+	return Plugin_Continue;
 }
 
 /**
@@ -399,6 +402,40 @@ void OnPlayerLoadoutUpdatedPost(UserMsg msg_id, bool sent) {
 	
 	// TODO: switch to the correct slot if we're not holding anything
 	// as is the case again, this happens on non-valid-for-class items
+}
+
+void OnPlayerChangeClassPost(Event event, const char[] name, bool dontBroadcast) {
+	int client = GetClientOfUserId(event.GetInt("userid"));
+	if (IsValidClient(client))
+	{
+		CreateTimer(0.1, RegenerateTimer, GetClientUserId(client));
+	}
+}
+
+Action RegenerateTimer(Handle timer, int userid)
+{
+	int client = GetClientOfUserId(userid);
+	
+	TF2_RegeneratePlayer(client);
+
+	return Plugin_Continue;
+}
+
+stock bool IsValidClient(int client, bool replaycheck=true)
+{
+	if(client<=0 || client>MaxClients)
+		return false;
+
+	if(!IsClientInGame(client))
+		return false;
+
+	if(GetEntProp(client, Prop_Send, "m_bIsCoaching"))
+		return false;
+
+	if(replaycheck && (IsClientSourceTV(client) || IsClientReplay(client)))
+		return false;
+
+	return true;
 }
 
 void OnPlayerSpawnPost(Event event, const char[] name, bool dontBroadcast) {
@@ -546,6 +583,8 @@ public Action OnClientCommandKeyValues(int client, KeyValues kv) {
 	if (StrEqual(cmd, "MVM_Respec")) {
 		g_bForceReequipItems[client] = true;
 	}
+
+	return Plugin_Continue;
 }
 
 public void OnClientCommandKeyValues_Post(int client, KeyValues kv) {
